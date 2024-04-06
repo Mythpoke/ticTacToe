@@ -13,9 +13,9 @@ const gameboard = (function () {
     
 
     const player = function (name, mark, square) {
+        const result = [];
         const makeMove = () =>
-       result.push(gameboard.board.game.splice(square - 1, 1, mark));
-    
+       gameboard.board.game.splice(square - 1, 1, mark);
        return {name, mark, square, makeMove};
         
 }
