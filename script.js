@@ -1,9 +1,9 @@
 let square = 1;
 const gameboard = (function () {
         const board = {
-            game: ['O', 'O', 'O',
-                   'X', 'O', 'X',
-                   'O', 'X', 'O'],
+            game: ['', '', '',
+                   '', '', '',
+                   '', '', ''],
         }
 
         return {
@@ -13,12 +13,10 @@ const gameboard = (function () {
     
 
     const player = function (name, mark, square) {
-        const result = [];
         const makeMove = () =>
        result.push(gameboard.board.game.splice(square - 1, 1, mark));
-       const checkResult = () => console.log(`result for ${name} is ` + result);
     
-       return {name, square, makeMove, result, checkResult};
+       return {name, mark, square, makeMove};
         
 }
 
@@ -42,15 +40,18 @@ function game() {
         player2 = player(player2.name, prompt(player2.name + " Choose a mark '0' or 'X'."));
 
     } while(
-        player1.mark !== "X" || player1.mark !== "O" ||
-        player2.mark !== "X" || player2.mark !== "O" ||
+        (player1.mark !== "X" && player1.mark !== "O") ||
+        (player2.mark !== "X" && player2.mark !== "O") ||
         player1.mark === player2.mark
     );
+
+    for(let i = 0; gameboard.board.game.length > i; i++) {
+
 
     do {
 
         player1 = player(player1.name, player1.mark, +prompt(player1.name + " Choose a square from 1 to 9"));
-        player2 = player(player2.name, player1.mark, +prompt(player2.name + " Choose a square from 1 to 9"));
+        player2 = player(player2.name, player2.mark, +prompt(player2.name + " Choose a square from 1 to 9"));
 
     } while(
         isNaN(player1.square) || isNaN(player2.square) ||
@@ -59,82 +60,113 @@ function game() {
         player1.square === player2.square
     );
 
+    player1.makeMove();
+    player2.makeMove();
+   if(getWinner(player1.mark, player2.mark)) break;
+   }
 }
-
+game();
 function getWinner(player1Mark, player2Mark) {
 
-    let player1MarkHorizontal = [];
-    let player2MarkHorizontal = [];
+    const variables = {
+        player1MarkHorizontal: 0,
+        player2MarkHorizontal: 0,
 
-    let player1MarkVertical = [];
-    let player2MarkVertical = [];
+        player1MarkVerticalColumn1: 0,
+        player2MarkVerticalColumn1: 0,
+        player1MarkVerticalColumn2: 0,
+        player2MarkVerticalColumn2: 0,
+        player1MarkVerticalColumn3: 0,
+        player2MarkVerticalColumn3: 0,
 
-    let player1MarkObliquely = [];
-    let player2MarkObliquely = [];
+        player1MarkDiagonal: 0,
+        player2MarkDiagonal: 0,
+
+        player1MarkAntiDiagonal: 0,
+        player2MarkAntiDiagonal: 0,
+
+    }
 
     for(let i = 0; gameboard.board.game.length > i; i++) {
-        console.log(gameboard.board.game.length);
-        if(player1MarkHorizontal.length === 3 || player1MarkVertical.length === 3) return "Player1 won";
-        else if(player2MarkHorizontal.length === 3 || player2MarkHorizontal.length === 3) return "Player2 won";
 
-        if(player1Mark === gameboard.board.game[i]) {
-            player1MarkHorizontal = gameboard.board.game.push(gameboard.board.game[i]);
-            player2MarkHorizontal = [];
+        if(player1Mark === gameboard.board.game[i]) {           /// Checks horizontal condition
+            variables.player1MarkHorizontal++;
         }
         else if(player2Mark === gameboard.board.game[i]) {
-            player2MarkHorizontal = gameboard.board.game.push(gameboard.board.game[i]);
-            player1MarkHorizontal = [];
+            variables.player2MarkHorizontal++;
         }
 
-        for(let j = 0; 6 >= j; j += 3) {
-            if(i > 2) break;
+        
 
-            if(player1Mark === gameboard.board.game[j + i]) {
-                player1MarkVertical = gameboard.board.game.push(gameboard.board.game[i]);
-                player2MarkVertical = [];
+        if(i % 3 === 0) {         //Checks vertical condition 
+            if(player1Mark === gameboard.board.game[i]) {
+                variables.player1MarkVerticalColumn1++;
+                
             }
-            else if(player2Mark === gameboard.board.game[j + i]) {
-                player2MarkVertical = gameboard.board.game.push(gameboard.board.game[i]);
-                player1MarkVertical = [];
+            else if(player2Mark === gameboard.board.game[i]) {
+                variables.player2MarkVerticalColumn1++;
+                
+            }
+        }
+        else if(i % 3 === 1) {         //Checks vertical condition 
+            if(player1Mark === gameboard.board.game[i]) {
+                variables.player1MarkVerticalColumn2++;
+                
+            }
+            else if(player2Mark === gameboard.board.game[i]) {
+                variables.player2MarkVerticalColumn2++;
+                
+            }
+        }
+        else if(i % 3 === 2) {         //Checks vertical condition 
+            if(player1Mark === gameboard.board.game[i]) {
+                variables.player1MarkVerticalColumn3++;
+                
+            }
+            else if(player2Mark === gameboard.board.game[i]) {
+                variables.player2MarkVerticalColumn3++;
+                
             }
         }
 
         
+        
+
+        if(i === 0 || i === 4 || i === 8) {             //Checks diagonal condition
+            if(player1Mark === gameboard.board.game[i]) {
+                variables.player1MarkDiagonal++;
+            }
+            else if(player2Mark === gameboard.board.game[i]) {
+                variables.player2MarkDiagonal++;
+            }
+        }
+
+        if(i === 2 || i === 4 || i === 6) {             //Chceks antiDiagonal condition
+            if(player1Mark === gameboard.board.game[i]) {
+                variables.player1MarkAntiDiagonal++;
+            }
+            else if(player2Mark === gameboard.board.game[i]) {
+                variables.player2MarkAntiDiagonal++;
+            }
+        }
+        
+        if(variables.player1MarkHorizontal === 3 ) return "Player1 won hori";
+        else if(variables.player1MarkVertical === 3) return "Player1 won veri";
+        else if(variables.player1MarkDiagonal === 3) return "Player1 won diago";
+        else if(variables.player1MarkAntiDiagonal === 3) return "Player1 won antDia";
+
+        else if(variables.player2MarkHorizontal === 3) return "Player2 won hoti";
+        else if(variables.player2MarkVertical === 3) return "Player2 won vert"; 
+        else if(variables.player2MarkDiagonal === 3) return "Player2 won diago";
+        else if(variables.player2MarkAntiDiagonal === 3) return "Player2 won antDia";
+
+        if(i === 2 || i === 5 || i === 8) {
+            variables.player2MarkHorizontal = 0;
+            variables.player1MarkHorizontal = 0;
+        }
+        
     }
 
-    for(let k = 0; 8 >= k; k+= 4) {
-        if(player1MarkObliquely.length === 3) return "Player1 won (skosna)";
-        if(player2MarkObliquely.length === 3) return "Player2 won (skosna)";
-
-        if(player1Mark === gameboard.board.game[k]) {
-            player1MarkVertical = gameboard.board.game.push(gameboard.board.game[i]);
-            player2MarkVertical = [];
-        }
-        else if(player2Mark === gameboard.board.game[k]) {
-            player2MarkVertical = gameboard.board.game.push(gameboard.board.game[i]);
-            player1MarkVertical = [];
-        }
-
-    }
-
-    player1MarkObliquely = [];
-    player2MarkObliquely = [];
-
-    for(let l = 2; 6 >= l; l+= 2) {
-        if(player1MarkObliquely.length === 3) return "Player1 won (skosna)";
-        if(player2MarkObliquely.length === 3) return "Player2 won (skosna)";
-
-        if(player1Mark === gameboard.board.game[l]) {
-                player1MarkObliquely = gameboard.board.game.push(gameboard.board.game[l]);
-                player2MarkObliquely = [];
-        }
-        else if(player2Mark === gameboard.board.game[l]) {
-            player2MarkObliquely = gameboard.board.game.push(gameboard.board.game[l]);
-            player1MarkObliquely = [];
-        }
-    } 
-
+  
 
 }
-
-console.log(getWinner("0", "X"));
