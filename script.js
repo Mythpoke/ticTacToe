@@ -1,26 +1,3 @@
-let square = 1;
-const gameboard = (function () {
-        const board = {
-            game: ['', '', '',
-                   '', '', '',
-                   '', '', ''],
-        }
-
-        return {
-            board,
-        }
-})()
-    
-
-    const player = function (name, mark, square) {
-        const result = [];
-        const makeMove = () =>
-       gameboard.board.game.splice(square - 1, 1, mark);
-       return {name, mark, square, makeMove};
-        
-}
-
-
 
 function game() {
 
@@ -62,10 +39,50 @@ function game() {
 
     player1.makeMove();
     player2.makeMove();
-   if(getWinner(player1.mark, player2.mark)) break;
+   if(getWinner(player1.mark, player2.mark) === 1) player1Result++;
+   else if(getWinner(player1.mark, player2.mark) === -1) player2Result++;
+   else if(getWinner(player1.mark, player2.mark) === 0) return 0;
+
+   if(player1Result === 3) break;
+   else if(player2Result === 3) break;
    }
 }
-game();
+
+
+const gameboard = (function () {
+    const board = {
+        game: ['', '', '',
+               '', '', '',
+               '', '', ''],
+    }
+    const player = function (name, mark, square) {
+        const result = [];
+        const makeMove = () =>
+       gameboard.board.game.splice(square - 1, 1, mark);
+       return {name, mark, square, makeMove};
+        
+}
+
+    return {
+        board,
+        player,
+    }
+})()
+
+const DOM = (function() {                           //Handle display & DOM logic
+    const grid = document.getElementById('grid');
+    for(let i = 0; 9 > i; i++) {
+        const square = document.createElement('div');
+        square.className = 'square';
+        square.style.height = 400 / 3 + "px";
+        square.style.width = 400 / 3 + "px";
+        grid.appendChild(square);
+    }
+
+})()
+
+
+
 function getWinner(player1Mark, player2Mark) {
 
     const variables = {
@@ -85,9 +102,13 @@ function getWinner(player1Mark, player2Mark) {
         player1MarkAntiDiagonal: 0,
         player2MarkAntiDiagonal: 0,
 
+        draw: 0,
+
     }
 
     for(let i = 0; gameboard.board.game.length > i; i++) {
+
+        draw++;
 
         if(player1Mark === gameboard.board.game[i]) {           /// Checks horizontal condition
             variables.player1MarkHorizontal++;
@@ -150,15 +171,11 @@ function getWinner(player1Mark, player2Mark) {
             }
         }
         
-        if(variables.player1MarkHorizontal === 3 ) return "Player1 won hori";
-        else if(variables.player1MarkVertical === 3) return "Player1 won veri";
-        else if(variables.player1MarkDiagonal === 3) return "Player1 won diago";
-        else if(variables.player1MarkAntiDiagonal === 3) return "Player1 won antDia";
-
-        else if(variables.player2MarkHorizontal === 3) return "Player2 won hoti";
-        else if(variables.player2MarkVertical === 3) return "Player2 won vert"; 
-        else if(variables.player2MarkDiagonal === 3) return "Player2 won diago";
-        else if(variables.player2MarkAntiDiagonal === 3) return "Player2 won antDia";
+        if(variables.player1MarkHorizontal === 3 || variables.player1MarkVertical === 3 ||
+           variables.player1MarkDiagonal === 3 || variables.player1MarkAntiDiagonal === 3 ) return 1;
+        else if(variables.player2MarkHorizontal === 3 || variables.player2MarkVertical === 3 ||
+                variables.player2MarkDiagonal === 3 || variables.player2MarkAntiDiagonal === 3) return -1; 
+        else if(variables.draw === 9) return 0;
 
         if(i === 2 || i === 5 || i === 8) {
             variables.player2MarkHorizontal = 0;
@@ -167,6 +184,8 @@ function getWinner(player1Mark, player2Mark) {
         
     }
 
-  
+
 
 }
+
+game();

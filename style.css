@@ -1,0 +1,53 @@
+body {
+    height: 100vh;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif; color: #222;
+    background-color:blanchedalmond
+}
+
+#container {
+    background: burlywood;
+    border: solid brown;
+    height: 900px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    justify-content: center;
+}
+
+#ticTacToe {
+    font-size: 70px;
+    margin-bottom: 40px;
+}
+
+#grid {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 400px;
+    width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#buttons {
+    background-color: beige;
+    width: 65%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.square {
+    box-sizing: border-box;
+    border: solid black;
+}
+
+
+#headerContainer {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+}
