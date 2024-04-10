@@ -43,6 +43,9 @@ body {
 .square {
     box-sizing: border-box;
     border: solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 

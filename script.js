@@ -1,191 +1,186 @@
-
-function game() {
-
+function startGame() {
     let player1, player2;
-
-    do {
-
-        player1 = player(prompt("Choose a name for player one"));
-        player2 = player(prompt("Choose a name for player two"));
+    player1 = player(prompt("name?"));
+    player2 = player(prompt("name?"));
     
-    } while(
-        player1.name === "" || player2.name === ""
-    ); 
+    player1 = player(player1.name, prompt("mark?"));
+    player2 = player(player2.name, prompt("mark?"));
+
+    Dom.DomObj.currentMark = player1.mark;
 
     do {
-        player1 = player(player1.name, prompt(player1.name + " Choose a mark '0' or 'X'."));
-        player2 = player(player2.name, prompt(player2.name + " Choose a mark '0' or 'X'."));
+    player1 = player(player1.name, player1.mark, Dom.DomObj.index);
+    player2 = player(player2.name, player2.mark, Dom.DomObj.index);
 
-    } while(
-        (player1.mark !== "X" && player1.mark !== "O") ||
-        (player2.mark !== "X" && player2.mark !== "O") ||
-        player1.mark === player2.mark
-    );
+        
+} while(checkWinner(getRound(player1.mark, player2.mark)))
+    }
 
-    for(let i = 0; gameboard.board.game.length > i; i++) {
-
-
-    do {
-
-        player1 = player(player1.name, player1.mark, +prompt(player1.name + " Choose a square from 1 to 9"));
-        player2 = player(player2.name, player2.mark, +prompt(player2.name + " Choose a square from 1 to 9"));
-
-    } while(
-        isNaN(player1.square) || isNaN(player2.square) ||
-        !(player1.square >= 1 && player1.square <= 9) ||
-        !(player2.square >= 1 && player2.square <= 9) ||
-        player1.square === player2.square
-    );
-
-    player1.makeMove();
-    player2.makeMove();
-   if(getWinner(player1.mark, player2.mark) === 1) player1Result++;
-   else if(getWinner(player1.mark, player2.mark) === -1) player2Result++;
-   else if(getWinner(player1.mark, player2.mark) === 0) return 0;
-
-   if(player1Result === 3) break;
-   else if(player2Result === 3) break;
-   }
+function toggleMark(player, mark) {
+    return player === mark ? mark: player;
 }
-
-
+// IIFE
 const gameboard = (function () {
-    const board = {
-        game: ['', '', '',
+    const obj = {
+        board: ['', '', '',
                '', '', '',
                '', '', ''],
     }
-    const player = function (name, mark, square) {
-        const result = [];
-        const makeMove = () =>
-       gameboard.board.game.splice(square - 1, 1, mark);
-       return {name, mark, square, makeMove};
-        
-}
-
     return {
-        board,
-        player,
+        obj,
     }
-})()
-
-const DOM = (function() {                           //Handle display & DOM logic
-    const grid = document.getElementById('grid');
+})();
+// IIFE
+const Dom = (function() {     
+    const DomObj = {
+        grid: document.getElementById('grid'),
+        turn: document.getElementById('turn'),
+        result: document.getElementById('result'),
+        startBtn: document.getElementById('startBtn'),
+        restartBtn: document.getElementById('restartBtn'),
+        currentMark: "X",
+        index: 0,
+    }                      //Handle display & DOM logic
+    
     for(let i = 0; 9 > i; i++) {
+
+        
         const square = document.createElement('div');
         square.className = 'square';
+        square.setAttribute("data-index", i);
+        square.style.fontSize = 120 + "px";
         square.style.height = 400 / 3 + "px";
         square.style.width = 400 / 3 + "px";
-        grid.appendChild(square);
+        DomObj.grid.appendChild(square);
+        square.addEventListener('click', ()=> {
+    
+         DomObj.index = square.getAttribute("data-index");
+           if(DomObj.currentMark === "X") {
+                square.textContent = "X";
+                DomObj.currentMark = "O";
+                gameboard.obj.board.splice(DomObj.index, 1, "X");
+           }
+           else {
+                square.textContent = "O";
+                DomObj.currentMark = "X";
+                gameboard.obj.board.splice(DomObj.index, 1, "O");
+           }
+           
+
+        }, {once: true})
+        
     }
+    startBtn.addEventListener('click', ()=> {
+        startGame();
+    })
+    return {DomObj};
+})();
 
-})()
 
 
+// Factory function
+const player = function (name, mark) {
 
-function getWinner(player1Mark, player2Mark) {
-
-    const variables = {
-        player1MarkHorizontal: 0,
-        player2MarkHorizontal: 0,
-
-        player1MarkVerticalColumn1: 0,
-        player2MarkVerticalColumn1: 0,
-        player1MarkVerticalColumn2: 0,
-        player2MarkVerticalColumn2: 0,
-        player1MarkVerticalColumn3: 0,
-        player2MarkVerticalColumn3: 0,
-
-        player1MarkDiagonal: 0,
-        player2MarkDiagonal: 0,
-
-        player1MarkAntiDiagonal: 0,
-        player2MarkAntiDiagonal: 0,
-
-        draw: 0,
-
+   return {name, mark};
+    
+}
+//Factory function
+const combination = function () {
+    
+    return {HorizontalMark: 0, VerticalMarkColumn1: 0, VerticalMarkColumn2: 0, VerticalMarkColumn3: 0, DiagonalMark: 0, AntiDiagonalMark: 0};
+}
+// Other functions
+function checkWinner(Result) {
+    if(Result === 1) {
+        console.log("Player 1 won");
     }
+    else if(Result === -1) {
+        console.log("Player 2 won");
+    }
+}
 
-    for(let i = 0; gameboard.board.game.length > i; i++) {
+function getRound(player1Mark, player2Mark) {
 
-        draw++;
+   let player1 = combination();
+   let player2 = combination();
 
-        if(player1Mark === gameboard.board.game[i]) {           /// Checks horizontal condition
-            variables.player1MarkHorizontal++;
+    for(let i = 0; gameboard.obj.board.length > i; i++) {
+
+
+        if(player1Mark === gameboard.obj.board[i]) {           /// Checks horizontal condition
+            player1.HorizontalMark++;
         }
-        else if(player2Mark === gameboard.board.game[i]) {
-            variables.player2MarkHorizontal++;
+        else if(player2Mark === gameboard.obj.board[i]) {
+            player2.HorizontalMark++;
         }
 
         
 
         if(i % 3 === 0) {         //Checks vertical condition 
-            if(player1Mark === gameboard.board.game[i]) {
-                variables.player1MarkVerticalColumn1++;
+            if(player1Mark === gameboard.obj.board[i]) {
+                player1.VerticalMarkColumn1++;
                 
             }
-            else if(player2Mark === gameboard.board.game[i]) {
-                variables.player2MarkVerticalColumn1++;
+            else if(player2Mark === gameboard.obj.board[i]) {
+                player2.VerticalMarkColumn1++;
                 
             }
         }
         else if(i % 3 === 1) {         //Checks vertical condition 
-            if(player1Mark === gameboard.board.game[i]) {
-                variables.player1MarkVerticalColumn2++;
+            if(player1Mark === gameboard.obj.board[i]) {
+                player1.VerticalMarkColumn2++;
                 
             }
-            else if(player2Mark === gameboard.board.game[i]) {
-                variables.player2MarkVerticalColumn2++;
+            else if(player2Mark === gameboard.obj.board[i]) {
+                player2.VerticalMarkColumn2++;
                 
             }
         }
         else if(i % 3 === 2) {         //Checks vertical condition 
-            if(player1Mark === gameboard.board.game[i]) {
-                variables.player1MarkVerticalColumn3++;
+            if(player1Mark === gameboard.obj.board[i]) {
+                player1.VerticalMarkColumn3++;
                 
             }
-            else if(player2Mark === gameboard.board.game[i]) {
-                variables.player2MarkVerticalColumn3++;
+            else if(player2Mark === gameboard.obj.board[i]) {
+                player2.VerticalMarkColumn3++;
                 
             }
         }
 
-        
-        
-
         if(i === 0 || i === 4 || i === 8) {             //Checks diagonal condition
-            if(player1Mark === gameboard.board.game[i]) {
-                variables.player1MarkDiagonal++;
+            if(player1Mark === gameboard.obj.board[i]) {
+                player1.MarkDiagonal++;
             }
-            else if(player2Mark === gameboard.board.game[i]) {
-                variables.player2MarkDiagonal++;
+            else if(player2Mark === gameboard.obj.board[i]) {
+                player2.MarkDiagonal++;
             }
         }
 
         if(i === 2 || i === 4 || i === 6) {             //Chceks antiDiagonal condition
-            if(player1Mark === gameboard.board.game[i]) {
-                variables.player1MarkAntiDiagonal++;
+            if(player1Mark === gameboard.obj.board[i]) {
+                player1.AntiDiagonalMark++;
             }
-            else if(player2Mark === gameboard.board.game[i]) {
-                variables.player2MarkAntiDiagonal++;
+            else if(player2Mark === gameboard.obj.board[i]) {
+                player2.AntiDiagonalMark++;
             }
         }
         
-        if(variables.player1MarkHorizontal === 3 || variables.player1MarkVertical === 3 ||
-           variables.player1MarkDiagonal === 3 || variables.player1MarkAntiDiagonal === 3 ) return 1;
-        else if(variables.player2MarkHorizontal === 3 || variables.player2MarkVertical === 3 ||
-                variables.player2MarkDiagonal === 3 || variables.player2MarkAntiDiagonal === 3) return -1; 
-        else if(variables.draw === 9) return 0;
+        if(player1.HorizontalMark === 3 || player1.VerticalMarkColumn1 === 3 ||
+            player1.VerticalMarkColumn2 === 3 || player1.VerticalMarkColumn3 === 3 ||
+            player1.MarkDiagonal === 3 || player1.AntiDiagonalMark === 3 ) return 1;
+            
+        else if(player2.HorizontalMark === 3 || player2.VerticalMarkColumn1 === 3 ||
+            player2.VerticalMarkColumn2 === 3 || player2.VerticalMarkColumn3 === 3 ||
+            player2.MarkDiagonal === 3 || player2.AntiDiagonalMark === 3) return -1; 
 
-        if(i === 2 || i === 5 || i === 8) {
-            variables.player2MarkHorizontal = 0;
-            variables.player1MarkHorizontal = 0;
+        else if(i === 8) return 0;
+
+        if(i === 2 || i === 5) {
+            player1.HorizontalMark = 0;
+            player2.HorizontalMark = 0;
         }
         
     }
 
-
-
 }
 
-game();
