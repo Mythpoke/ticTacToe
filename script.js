@@ -264,4 +264,5 @@ function restartGameboard() {
 
     // Clear result text
     Dom.DomObj.result.textContent = "";
+    Dom.DomObj.turn.textContent = "";
 }

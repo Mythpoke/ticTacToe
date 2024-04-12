@@ -34,7 +34,6 @@ body {
 }
 
 #buttons {
-    background-color: beige;
     width: 65%;
     display: flex;
     justify-content: space-between;
@@ -53,4 +52,15 @@ body {
     width: 60%;
     display: flex;
     justify-content: space-between;
+}
+
+#startBtn {
+    background-color: wheat;
+    font-weight: bold;
+    padding: 5px 20px;
+}
+
+#restartBtn {
+    background-color: wheat;
+    font-weight: bold;
 }
