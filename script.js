@@ -256,11 +256,11 @@ function restartGameboard() {
     // Enable all squares
     document.querySelectorAll('.square').forEach((square) => {
         square.textContent = '';
-        square.disabled = false;
+        square.disabled = true;
     });
     // Update turn indicator and current mark
-    Dom.DomObj.turn.textContent = `${Dom.DomObj.player1.name}'s turn`;
-    Dom.DomObj.currentMark = Dom.DomObj.player1.mark;
+    // Dom.DomObj.turn.textContent = `${Dom.DomObj.player1.name}'s turn`;
+    // Dom.DomObj.currentMark = Dom.DomObj.player1.mark;
 
     // Clear result text
     Dom.DomObj.result.textContent = "";
