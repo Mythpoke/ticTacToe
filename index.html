@@ -10,16 +10,36 @@
     <div id="mainContainer">
         <div id="btnContainer">
             <div id="leftContainer">
-                <button>Start</button>
-                <button>Reset</button>
+                <button id ="start">Start</button>
+                <button id ="reset">Reset</button>
             </div>
             <div id="rightContainer">
-                <div class="text">Player's turn</div>
-                <div class="text">Result: 0:1</div>
+                <div id="turn" class="text">Player's turn</div>
+                <div class="text">Result: 0:0</div>
             </div>
         </div>
         <div id="gridContainer"></div>
     </div>
+    <dialog>
+        <form>
+            <div id="formTop">
+                <label>Player one</label>
+                <input id="playerOne" placeholder="Enter player's name" type="text">
+                <label>Mark</label>
+                <input id="markOne" placeholder='Enter "X" or "O"' type="text">
+            </div>
+            <div id="formMid">
+                <label>Player two</label>
+                <input id="playerTwo" placeholder="enter player's name" type="text">
+                <label>Mark</label>
+                <input id="markTwo" placeholder='Enter "X" or "O"' type="text">
+            </div>
+            <div id="formBot">  
+                <input id="submit" type="button">
+            </div>
+            
+        </form>
+    </dialog>
     <script src="script.js"></script>
 </body>
 </html>
