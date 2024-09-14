@@ -1,3 +1,21 @@
+
+const displayController = (function () {
+    let toggle = true;
+
+function drawChars(cube) {
+
+    const markOne = document.getElementById("markOne");
+    const playerTwo = document.getElementById("playerTwo");
+    const playerOne = document.getElementById("playerOne");
+    const turn = document.getElementById("turn");    
+
+    cube.addEventListener("click", ()=> {
+        markOne.value === "X" ? cube.textContent = "X": cube.textContent = "O";
+        toggle == true ? turn.textContent = playerOne.value + "'s turn": turn.textContent = playerTwo.value + "'s turn";
+        toggle = !toggle;
+    })
+}
+
 function makeGrid() {
     const gridContainer = document.getElementById("gridContainer");
 
@@ -8,28 +26,44 @@ function makeGrid() {
 
         cube.style.width = 400 / 3 + "px";
         cube.style.height = 400 / 3 + "px";
-        cube.textContent = "X";
+
+        drawChars(cube);
     }
 } 
 
-makeGrid();
+    return { makeGrid, drawChars };
+})()
 
-const start = document.getElementById("start");
-const dialog = document.querySelector("dialog");
-const playerOne = document.getElementById("playerOne");
-const playerTwo = document.getElementById("playerTwo");
-const markOne = document.getElementById("markOne");
-const markTwo = document.getElementById("markTwo");
-const submit = document.getElementById("submit");
 
-const turn = document.getElementById("turn");
+const gameBoard = (function () {
+    
+   
 
-start.addEventListener("click", ()=> {
-    dialog.showModal()
-;})
-submit.addEventListener("click", ()=> {
-    dialog.close();
-    console.log(submit.value);
-    turn.textContent = playerOne.value;
-;})
+function startGame() {
+
+    const submit = document.getElementById("submit");
+    const dialog = document.querySelector("dialog");
+    const start = document.getElementById("start");
+    const playerOne = document.getElementById("playerOne");
+    const turn = document.getElementById("turn");
+
+    start.addEventListener("click", ()=> {
+        dialog.showModal()
+    ;})
+    
+    submit.addEventListener("click", ()=> {
+        dialog.close();
+        turn.textContent = playerOne.value + "'s turn";
+        start.disabled = true;
+    ;})
+
+}
+
+   return { startGame };
+
+})();
+
+gameBoard.startGame();
+displayController.makeGrid();
+
 

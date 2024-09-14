@@ -41,13 +41,15 @@ html, body {
     justify-content: space-between;
 }
 
-button {
+button, #start:disabled {
     border-radius: 5px;
     background: linear-gradient(#352c83, #9198e5);
     padding: 2px 15px;
     font-size: 25px;
     font-weight: bold;
+    opacity: 1 !important;
 }
+
 .text {
     font-size: 25px;
     font-weight: bold;
